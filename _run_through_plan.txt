@@ -1,0 +1,60 @@
+//start point - grab one row and process it the way you want
+
+    document.getElementById('calculate_button').addEventListener('click', processTable);
+    function processTable() {
+        let quantity1         = document.getElementById('quantity1');
+        let emissionsFactor1  = document.getElementById('emissions1');
+        let totalEmissions1   = document.getElementById('totalEmissions1');
+
+        let quantity        = parseFloat(quantity1.value) || 0;
+        let emissionsFactor = parseFloat(emissionsFactor1.value) || 0;
+
+        
+        let calculatedEmissions = (quantity * emissionsFactor).toFixed(2);
+        totalEmissions1.textContent = calculatedEmissions;
+   }
+   
+ 
+ //then use a loop
+    let inputElements = document.querySelectorAll('input[type="text"]');
+    let rowId=1;
+    inputElements.forEach( row=>{
+            let quantity         = document.getElementById('quantity'+rowId);
+            let emissionsFactor  = document.getElementById('emissions'+rowId);
+            let totalEmissions   = document.getElementById('totalEmissions'+rowId);
+            rowId++;
+            //build a record (on-the-fly object literal) using value
+            let dataObject = {qty: quantity.value, em:emissionsFactor.value, total: totalEmissions.textContent };
+            console.log(dataObject);
+            //console.log that 
+        }   
+    );
+ //then show access placeholder text
+            //build a record (on-the-fly object literal) using value
+            let dataObject = {qty: quantity.getAttribute('placeholder'), em:emissionsFactor.getAttribute('placeholder', total: totalEmissions.textContent };
+ 
+
+ //then show text parse and number generate on that placeholder text
+ //show in console snippet
+	 test();
+	 function test(){
+	  function getNumberFrom( placeholderText ){
+		let numberPart = placeholderText.split(" ")[0];
+		numberPart = numberPart.replace(/,/, '');
+		return numberPart;
+	  }
+	  const value2 = "50 tons";
+	  const value1 = "1000 MMBtu";
+	  const value3 = "500,000 kWh";
+	  const value4 = "5000 gallons";
+	  const value5 = "10,000 gallons";
+
+
+	  let result1 = getNumberFrom(value1);
+	  let result2 = getNumberFrom(value2);
+	  let result3 = getNumberFrom(value3);
+	  let result4 = getNumberFrom(value4);
+	  let result5 = getNumberFrom(value5);
+
+	  console.log(result1, result2, result3, result4, result5);
+	 }
