@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company CO2 Usage Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+    
+</head>
+<body>
+
+<button id="calculate-button">Calculate</button>
+<table>
+    <thead>
+        <tr>
+            <th>Fuel Type</th>
+            <th>Quantity Used (units)</th>
+            <th>CO2 Emissions Factor (kgCO2 per unit)</th>
+            <th>Total CO2 Emissions (kgCO2)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td id="fuelType1">Natural Gas</td>
+            <td><input id="quantity1"  type="text"  placeholder="1000 MMBtu"></td>
+            <td><input id="emissions1" type="text"  placeholder="53.07"></td>
+            <td id="totalEmissions1">53,070</td>
+        </tr>
+        <tr>
+            <td id="fuelType2">Solid Fuel</td>
+            <td><input id="quantity2"  type="text"  placeholder="50 tons"></td>
+            <td><input id="emissions2" type="text"  placeholder="2.5"></td>
+            <td id="totalEmissions2">125</td>
+        </tr>
+        <tr>
+            <td id="fuelType3">Electricity</td>
+            <td><input id="quantity3"  type="text"  placeholder="500,000 kWh"></td>
+            <td><input id="emissions3" type="text"  placeholder="0.4"></td>
+            <td id="totalEmissions3">200,000</td>
+        </tr>
+        <tr>
+            <td id="fuelType4">Diesel</td>
+            <td><input id="quantity4"  type="text"  placeholder="5000 gallons"></td>
+            <td><input id="emissions4" type="text"  placeholder="2.68"></td>
+            <td id="totalEmissions4">13,400</td>
+        </tr>
+        <tr>
+            <td id="fuelType5">Propane</td>
+            <td><input id="quantity5"  type="text"  placeholder="10,000 gallons"></td>
+            <td><input id="emissions5" type="text"  placeholder="1.98"></td>
+            <td id="totalEmissions5">19,800</td>
+        </tr>
+        <tr id="totals">
+            <td id="totalLabel">Total</td>
+            <td id="totalQuantity"></td>
+            <td id="totalEmissionsFactor"></td>
+            <td id="grandTotalEmissions">286,395</td>
+        </tr>
+    </tbody>
+</table>
+<script>
+    trs = document.querySelectorAll("tbody > tr")
+    rowId = 1;
+trs.forEach( row =>{
+    if( row.getAttribute("id")==="totals"){
+        return;
+    }
+    let quantity = document.getElementById("quantity"+rowId ).value;
+    let emission = document.getElementById("emissions"+rowId).value;
+    
+    if(!quantity){//if value is empty then use the placeholder text
+        let quantityPlaceHolderText = document.getElementById("quantity"+rowId ).getAttribute("placeholder");
+        let emissionPlaceHolderText = document.getElementById("emissions"+rowId ).getAttribute("placeholder");
+        
+        quantity = getNumberFrom(quantityPlaceHolderText); //extract numerical numberPart
+        emission = getNumberFrom(emissionPlaceHolderText); //extract numerical numberPart
+    }
+
+    let calculatedResult = quantity*emission;
+
+    //Object Literal version
+    //create an on-the-fly object with qty: ,em:, calculatedResult
+    // let recordData = { qty: `${quantity}`
+    //                   ,emission: `${emission}`
+    //                   ,total: `${calculatedResult}`};
+
+    //Constructor function version
+    function DataObject(quantity, emission, result){ //constructor function approach
+        this.quantity = quantity;
+        this.emission = emission;
+        this.result = result;
+    }
+    let recordData = new DataObject(quantity, emission, calculatedResult)
+
+
+    console.log(recordData);
+    console.log(`calculatedResults: qty: ${recordData.quantity}, em: ${recordData.emission}, rslt: ${recordData.result}`)
+    
+    let totalCol = document.getElementById("totalEmissions"+rowId);
+    totalCol.textContent = calculatedResult; //setting last col in HTML
+    rowId += 1;
+});
+function getNumberFrom( placeholderText ){
+		let numberPart = placeholderText.split(" ")[0];
+		numberPart = numberPart.replace(',', '');
+		return parseFloat(numberPart).toFixed(2);
+}
+
+    let calculateButton = document.getElementById("calculate-button");
+    calculateButton.addEventListener("click", processTable );
+
+    function processTable(event){
+        let quantity = document.getElementById("quantity1").value;
+        let emissions = document.getElementById("emissions1").value;
+
+        let calculatedResult = quantity * emissions;
+        let total = document.getElementById("totalEmissions1");
+        total.textContent = calculatedResult;
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+/*
+    quantity = parseFloat(quantity).toFixed(2); //either typed-in or the placeholder numerical then
+    emission = parseFloat(quantity).toFixed(2);
+
+*/
+*/
