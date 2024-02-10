@@ -73,65 +73,72 @@
     </tbody>
 </table>
 <script>
-    trs = document.querySelectorAll("tbody > tr")
-    rowId = 1;
-    trs.forEach( row =>{
-        if( row.getAttribute("id")==="totals"){
-            //prevent the totals row from failing at getElementByID 'quantity'
-            return;
-        }
-        let quantity = document.getElementById("quantity"+rowId ).value;
-        let emission = document.getElementById("emissions"+rowId).value;
-        quantity = parseFloat(quantity).toFixed(2);
-        emission = parseFloat(quantity).toFixed(2);
-
-        let calculatedResult = quantity*emission;
-
-        console.log(`${quantity} ${emission} ${calculatedResult}`)
-        
-        let totalCol = document.getElementById("totalEmissions"+rowId);
-        totalCol.textContent = calculatedResult;
-        rowId += 1;
-    });
-
     let calculateButton = document.getElementById("calculate-button");
     calculateButton.addEventListener("click", processTable );
 
+    /**
+     * Note below: it might better to assign class="table-data-record" to all 
+     *              the <tr>'s that have 'actual' data in the HTML
+     *              and say, "table-summary-record" for the last summary row.
+     *              That way, below, you could do ...querySelectorAll(".table-data-record")
+     *               and then wouldn't need to 'if( row.getAttribute("id")==="totals")'
+     */
     function processTable(event){
-        let quantity = document.getElementById("quantity1").value;
-        let emissions = document.getElementById("emissions1").value;
+        trs = document.querySelectorAll("tbody > tr")
+        rowId = 1;
+        trs.forEach( row =>{
+            if( row.getAttribute("id")==="totals"){
+                return;
+            }
+            let quantity = document.getElementById("quantity"+rowId ).value;
+            let emission = document.getElementById("emissions"+rowId).value;
+            
+            //if no quantity value: use the placeholder text instead
+            if(!quantity){          
+                let quantityPlaceHolderText = document.getElementById("quantity"+rowId ).getAttribute("placeholder");
+                quantity = getNumberFrom(quantityPlaceHolderText);                      //extract numerical numberPart
+                
+            }
+            //if no emission value: use the placeholder text instead
+            if(!emission){ 
+                let emissionPlaceHolderText = document.getElementById("emissions"+rowId ).getAttribute("placeholder");
+                emission = getNumberFrom(emissionPlaceHolderText);                      //extract numerical numberPart
+            }
+            
+            let calculatedResult = quantity*emission;
+            let recordData = new DataObject(quantity, emission, calculatedResult);      //Just showing DataObject 
 
-        let calculatedResult = quantity * emissions;
-        let total = document.getElementById("totalEmissions1");
-        total.textContent = calculatedResult;
+            //two print-outs for testing only: can comment-out
+            console.log(recordData);
+            console.log(`calculatedResults: qty: ${recordData.quantity}, em: ${recordData.emission}, rslt: ${recordData.result}`)
+            
+            let totalCol = document.getElementById("totalEmissions"+rowId);
+            totalCol.textContent = recordData.result;                                   //setting last col in HTML
+            rowId += 1;
+        });    
     }
+    
+    /**
+     * Function to pull the numerical part from placeholder text.
+     */
+     function getNumberFrom( placeholderText ){
+		let numberPart = placeholderText.split(" ")[0];
+		numberPart = numberPart.replace(',', '');
+		return parseFloat(numberPart).toFixed(2);
+    }
+
+    /**
+     * Constructor function to create a data object if needed
+     *  - called inside processTable() below for demo
+     */
+    function DataObject(quantity, emission, result){ 
+        this.quantity = quantity;
+        this.emission = emission;
+        this.result = result;
+    }
+
+ 
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
